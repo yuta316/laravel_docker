@@ -8,7 +8,7 @@ services:
     build: './docker/nginx/'
     # ホストの8080ポートとコンテナの80ポートをマッピング
     ports:
-      - '8080:80'
+      - '80:80'
     # ホストの./srcディレクトリとコンテナの/var/www/htmlディレクトリを同期
     volumes:
       - './src:/var/www/html'
