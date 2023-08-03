@@ -1,0 +1,47 @@
+# docker-composeのバージョン
+version: '3'
+
+services:
+  # Webサーバ
+  web:
+    container_name: 'web-server'
+    build: './docker/nginx/'
+    # ホストの8080ポートとコンテナの80ポートをマッピング
+    ports:
+      - '8080:80'
+    # ホストの./srcディレクトリとコンテナの/var/www/htmlディレクトリを同期
+    volumes:
+      - './src:/var/www/html'
+  # phpサーバ
+  php:
+    container_name: 'php-server'
+    build: './docker/php/'
+    # ホストの./srcディレクトリとコンテナの/var/www/htmlディレクトリを同期
+    volumes:
+      - './src:/var/www/html'
+    environment:
+      - APP_DEBUG=${APP_DEBUG:-true}
+      - APP_ENV=${APP_ENV:-production}
+      - APP_URL=${APP_URL:-http://localhost}
+      - LOG_CHANNEL=${LOG_CHANNEL:-stderr}
+      - LOG_STDERR_FORMATTER=${LOG_STDERR_FORMATTER:-Monolog\Formatter\JsonFormatter}
+      - DB_CONNECTION=${DB_CONNECTION:-mysql}
+      - DB_HOST=${DB_HOST:-db}
+      - DB_PORT=${DB_PORT:-3306}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+
+  # DBサーバ
+  db:
+    container_name: 'db-server'
+    build: './docker/db/'
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_USER=${DB_USERNAME}
+      - MYSQL_PASSWORD=${DB_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - './container/db/data:/var/lib/mysql'
