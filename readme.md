@@ -78,11 +78,38 @@ sudo mv リポジトリ名/* ./src/
 sudo mv リポジトリ名/.[^\.]* src/
 ```
 
+5. 各種設定
+
 ```
 sudo docker compose exec php composer install
 sudo docker compose exec php cp .env.example .env
+sudo docker compose exec php vim .env
+```
+
+env にて以下の内容を記載しておく
+
+```
+APP_NAME="アプリ名"
+APP_ENV=production
+APP_KEY=この後生成
+APP_DEBUG=false
+APP_URL="アプリURL(http://13.114.168.100/等EC2のパブリックIP)"
+
+中略
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE="作成したDB名"
+DB_USERNAME=root
+DB_PASSWORD="MySQL設定時のパスワード"
+```
+
+```
 sudo docker compose exec php php artisan key:generate
 sudo docker compose exec php php artisan storage:link
 sudo docker compose exec php chmod -R 777 storage bootstrap/cache -R
-sudo docker compose exec php npm install && npm run build
+sudo docker compose exec php npm install
+sudo docker compose exec php npm run build
+sudo docker compose exec php php artisan migrate:fresh
 ```
