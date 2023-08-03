@@ -59,7 +59,7 @@ DB_CONNECTION=mysql
 DB_HOST=db
 DB_PORT=3306
 DB_DATABASE=作成するデータベース名
-DB_USERNAME=作成するデータベースユーザ名
+DB_USERNAME=作成するデータベースユーザ名(root以外の一般ユーザ名を指定)
 DB_PASSWORD=作成するデータベースパスワード
 ```
 
@@ -100,9 +100,9 @@ APP_URL="アプリURL(http://13.114.168.100/等EC2のパブリックIP)"
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
-DB_DATABASE="作成したDB名"
-DB_USERNAME=root
-DB_PASSWORD="MySQL設定時のパスワード"
+DB_DATABASE=作成したデータベース名
+DB_USERNAME=作成したデータベースユーザ名
+DB_PASSWORD=作成したデータベースパスワード
 ```
 
 ```
