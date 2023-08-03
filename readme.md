@@ -69,3 +69,20 @@ DB_PASSWORD=作成するデータベースパスワード
 sudo docker compose build
 sudo docker compose up -d
 ```
+
+4. ソースコード反映
+
+```
+git clone git@github.com:githubアカウント名/リポジトリ名.git
+sudo mv リポジトリ名/* ./src/
+sudo mv リポジトリ名/.[^\.]* src/
+```
+
+```
+sudo docker compose exec php composer install
+sudo docker compose exec php cp .env.example .env
+sudo docker compose exec php php artisan key:generate
+sudo docker compose exec php php artisan storage:link
+sudo docker compose exec php chmod -R 777 storage bootstrap/cache -R
+sudo docker compose exec php npm install && npm run build
+```

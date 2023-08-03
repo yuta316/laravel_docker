@@ -11,6 +11,11 @@ RUN apt-get update \
 # LaravelがMySQLデータベースと連携するための拡張モジュールをインストール
 RUN docker-php-ext-install pdo_mysql
 
+# Node.jsとnpmのインストール
+RUN apt-get install -y curl \
+    && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
+    && apt-get install -y nodejs
+    
 # Composerをインストール
 ENV COMPOSER_ALLOW_SUPERUSER 1
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
