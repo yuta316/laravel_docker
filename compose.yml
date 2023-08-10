@@ -9,9 +9,11 @@ services:
     # ホストの8080ポートとコンテナの80ポートをマッピング
     ports:
       - '80:80'
+      - '443:443'
     # ホストの./srcディレクトリとコンテナの/var/www/htmlディレクトリを同期
     volumes:
       - './src:/var/www/html'
+      - '/etc/letsencrypt:/etc/letsencrypt'
   # phpサーバ
   php:
     container_name: 'php-server'
