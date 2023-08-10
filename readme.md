@@ -113,3 +113,67 @@ sudo docker compose exec php npm install
 sudo docker compose exec php npm run build
 sudo docker compose exec php php artisan migrate:fresh
 ```
+
+6. ssh化(AmazonLinux2023の場合)
+```
+sudo dnf install -y python3 augeas-libs pip
+sudo python3 -m venv /opt/certbot/
+sudo /opt/certbot/bin/pip install --upgrade pip
+sudo /opt/certbot/bin/pip install certbot
+sudo docker comose down
+```
+Certbotの実行
+```
+sudo certbot certonly --standalone
+```
+メールアドレス、Y、N、ドメイン名の順に入力する
+成功すると以下の様に証明書のパスが表示される。
+```
+Successfully received certificate.
+Certificate is saved at: /etc/letsencrypt/live/ドメイン名/fullchain.pem
+Key is saved at:         /etc/letsencrypt/live/ドメイン名/privkey.pem
+This certificate expires on 2023-11-08.
+These files will be updated when the certificate renews.
+```
+続いて生成したファイルのパスを記載する。
+```
+vim docker/nginx/nginx.conf
+```
+後半のserver{xxx}をコメントアウトし、ドメイン名を記載する
+```
+# server {
+#   listen       443 ssl http2;
+#   listen       [::]:443 ssl http2;
+#   server_name      ドメイン名を記入;
+#   root /var/www/html/public;
+#   ssl_certificate "/etc/letsencrypt/live/ドメイン名/fullchain.pem";
+#   ssl_certificate_key "/etc/letsencrypt/live/ドメイン名/privkey.pem";
+
+#   index index.php;
+
+#   # 文字セットをUTF-8に設定
+#   charset utf-8;
+
+#   # ルートへのリクエストを処理
+#   # 該当するファイルが存在しない場合はindex.phpにリダイレクト
+#   location / {
+#     try_files $uri $uri/ /index.php?$query_string;
+#   }
+
+#   # PHPファイルへのリクエストを処理
+#   location ~ \.php$ {
+#     # PHP-FPM（FastCGI Process Manager）にリクエストを転送
+#     # PHP-FPMはphp:9000で動作していると仮定
+#     fastcgi_pass php:9000;
+#     fastcgi_index index.php;
+#     fastcgi_param SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+#     # FastCGIの設定パラメータをインクルード
+#     include       fastcgi_params;
+#   }
+# }
+```
+再ビルド、コンテナ作成をすることで、サイトがSSL化される
+```
+sudo docker compose build
+sudo docker compose up -d
+```
