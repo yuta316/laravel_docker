@@ -120,7 +120,8 @@ sudo dnf install -y python3 augeas-libs pip
 sudo python3 -m venv /opt/certbot/
 sudo /opt/certbot/bin/pip install --upgrade pip
 sudo /opt/certbot/bin/pip install certbot
-sudo docker comose down
+sudo ln -s /opt/certbot/bin/certbot /usr/bin/certbot
+sudo docker compose down
 ```
 Certbotの実行
 ```
